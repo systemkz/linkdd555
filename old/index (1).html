@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>รวม Link</title>
+
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-Z06LDTZDBG"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-Z06LDTZDBG');
+</script>
+
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#FFD200">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --yellow: #FFD200;
+    --yellow-dark: #E6BC00;
+    --yellow-light: #FFF8CC;
+    --text-primary: #1a1a2e;
+    --text-secondary: #6b7280;
+    --bg: #F4F5F7;
+    --card-bg: #ffffff;
+    --shadow: 0 2px 12px rgba(0,0,0,0.07);
+    --shadow-hover: 0 8px 28px rgba(0,0,0,0.13);
+    --radius: 18px;
+    --radius-sm: 12px;
+    --accent1: #4F6BFF;
+    --accent2: #00B574;
+    --accent3: #FF6B35;
+    --accent4: #E94B8A;
+    --accent5: #7C3AED;
+    --accent6: #0EA5E9;
+  }
+
+  body {
+    font-family: 'Sarabun', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--bg);
+    min-height: 100vh;
+    color: var(--text-primary);
+  }
+
+  /* ─── HEADER ─── */
+  .header {
+    background: var(--yellow);
+    padding: 10px 20px 20px;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(255,210,0,0.35);
+  }
+  .header::before {
+    content: '';
+    position: absolute;
+    top: -40px; right: -40px;
+    width: 160px; height: 160px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 50%;
+  }
+  .header::after {
+    content: '';
+    position: absolute;
+    bottom: -20px; left: 30px;
+    width: 90px; height: 90px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 50%;
+  }
+  .header-inner {
+    position: relative;
+    z-index: 1;
+    text-align: center;
+  }
+  .header-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background: rgba(0,0,0,0.12);
+    color: rgba(0,0,0,0.75);
+    font-size: 12px;
+    font-weight: 600;
+    padding: 4px 12px;
+    border-radius: 20px;
+    margin-bottom: 10px;
+    letter-spacing: 0.5px;
+  }
+  .header h1 {
+    font-size: 26px;
+    font-weight: 700;
+    color: #1a1200;
+    line-height: 1.2;
+  }
+  .header-sub {
+    font-size: 13px;
+    color: rgba(0,0,0,0.6);
+    margin-top: 6px;
+    font-weight: 500;
+  }
+  .header-sub i { font-size: 15px; }
+
+  /* ─── WAVE ─── */
+  .wave {
+    display: block;
+    width: 100%;
+    height: 32px;
+    background: var(--yellow);
+    clip-path: ellipse(55% 100% at 50% 0%);
+    margin-bottom: -2px;
+  }
+
+  /* ─── SECTION LABEL ─── */
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    padding: 0 20px;
+    margin: 20px 0 10px;
+  }
+
+  /* ─── CONTAINER ─── */
+  .container {
+    padding: 0 14px 100px;
+  }
+
+  /* ─── CARD ─── */
+  .card {
+    background: var(--card-bg);
+    border-radius: var(--radius);
+    padding: 16px 18px;
+    margin-bottom: 11px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+    border: 1px solid rgba(0,0,0,0.04);
+    text-decoration: none;
+    color: inherit;
+  }
+  .card:active { transform: scale(0.975); box-shadow: var(--shadow); }
+  .card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+
+  .icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-size: 22px;
+    color: white;
+  }
+  .icon img {
+    width: 36px;
+    height: 36px;
+    object-fit: contain;
+  }
+
+  .card-text { flex: 1; min-width: 0; }
+  .title {
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 2px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .subtitle {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 400;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-arrow {
+    color: #d1d5db;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  /* icon color helpers */
+  .c-blue   { background: linear-gradient(135deg, #4F6BFF, #2B47CC); }
+  .c-green  { background: linear-gradient(135deg, #00B574, #007D4E); }
+  .c-orange { background: linear-gradient(135deg, #FF6B35, #D94B1A); }
+  .c-red    { background: linear-gradient(135deg, #E94B8A, #B8236A); }
+  .c-cyan   { background: linear-gradient(135deg, #0EA5E9, #0078B5); }
+  .c-purple { background: linear-gradient(135deg, #7C3AED, #5B1FC8); }
+  .c-yellow { background: linear-gradient(135deg, #FFD200, #E6A800); }
+  .c-teal   { background: linear-gradient(135deg, #14B8A6, #0E8A7D); }
+  .c-white  { background: #f9f9f9; border: 1px solid #e5e7eb; }
+  .c-grafana { background: linear-gradient(135deg, #F46800, #c85200); }
+
+  /* ─── GALLERY OVERLAY ─── */
+  #gallery {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: rgba(0,0,0,0.92);
+    z-index: 9999;
+    overflow-y: auto;
+    padding: 70px 16px 20px;
+  }
+  .gallery-close {
+    position: fixed;
+    top: 14px; right: 14px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 50px;
+    background: white;
+    color: #1a1a2e;
+    font-weight: 700;
+    font-size: 14px;
+    z-index: 10001;
+    cursor: pointer;
+    font-family: 'Sarabun', sans-serif;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.3);
+  }
+  #galleryImages {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 12px;
+  }
+  #galleryImages img {
+    width: 100%;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: transform 0.15s;
+    aspect-ratio: 3/4;
+    object-fit: cover;
+  }
+  #galleryImages img:hover { transform: scale(1.03); }
+
+  /* ─── VPN FRAME ─── */
+  #vpnFrame {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: white;
+    z-index: 9999;
+  }
+  .overlay-close {
+    position: absolute;
+    top: 12px; right: 12px;
+    padding: 10px 18px;
+    border: none;
+    border-radius: 50px;
+    background: var(--yellow);
+    color: #1a1200;
+    font-weight: 700;
+    font-size: 14px;
+    z-index: 10000;
+    cursor: pointer;
+    font-family: 'Sarabun', sans-serif;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+  }
+
+  /* ─── FAB INSTALL ─── */
+  #manualInstallBtn {
+    position: fixed;
+    bottom: 22px; right: 18px;
+    padding: 14px 20px;
+    border: none;
+    border-radius: 50px;
+    background: var(--yellow);
+    color: #1a1200;
+    font-size: 15px;
+    font-weight: 700;
+    font-family: 'Sarabun', sans-serif;
+    box-shadow: 0 6px 20px rgba(255,210,0,0.5);
+    z-index: 9999;
+    display: none;
+    cursor: pointer;
+    transition: transform 0.15s;
+  }
+  #manualInstallBtn:active { transform: scale(0.95); }
+
+  /* ─── CARD ENTER ANIMATION ─── */
+  .card {
+    animation: slideUp 0.35s ease both;
+  }
+  @keyframes slideUp {
+    from { opacity: 0; transform: translateY(18px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  .card:nth-child(1)  { animation-delay: 0.03s; }
+  .card:nth-child(2)  { animation-delay: 0.07s; }
+  .card:nth-child(3)  { animation-delay: 0.11s; }
+  .card:nth-child(4)  { animation-delay: 0.15s; }
+  .card:nth-child(5)  { animation-delay: 0.19s; }
+  .card:nth-child(6)  { animation-delay: 0.23s; }
+  .card:nth-child(7)  { animation-delay: 0.27s; }
+  .card:nth-child(8)  { animation-delay: 0.31s; }
+  .card:nth-child(9)  { animation-delay: 0.35s; }
+  .card:nth-child(10) { animation-delay: 0.39s; }
+  .card:nth-child(11) { animation-delay: 0.43s; }
+  .card:nth-child(12) { animation-delay: 0.47s; }
+  .card:nth-child(13) { animation-delay: 0.51s; }
+</style>
+</head>
+<body>
+
+<!-- ─── HEADER ─── -->
+<div class="header">
+  <div class="header-inner">
+    <div class="header-badge">
+      <i class="fas fa-link"></i> ลิงก์ที่ใช้บ่อย
+    </div>
+    <h1>🔎 รวม Link</h1>
+    <div class="header-sub">
+      เพิ่ม Link&nbsp; <i class="fa-brands fa-line"></i>&nbsp; แอดไลน์ <strong>0882746908</strong>
+    </div>
+  </div>
+</div>
+<div class="wave"></div>
+
+<!-- ─── MAIN CONTENT ─── -->
+<div class="container">
+
+  <div class="section-label">ระบบภายใน</div>
+
+  <!-- TIMESHEET -->
+  <div class="card" onclick="openLink(11)">
+    <div class="icon c-white"><img src="time.png"></div>
+    <div class="card-text">
+      <div class="title">TIMESHEET</div>
+      <div class="subtitle">ระบบบันทึกเวลาและการปฏิบัติงาน</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+  <!-- e-Office -->
+  <div class="card" onclick="openLink(6)">
+    <div class="icon c-white"><img src="nt.png"></div>
+    <div class="card-text">
+      <div class="title">e-Office</div>
+      <div class="subtitle">ใช้ภายนอกเชื่อม VPN ก่อนครับ</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+  <!-- OM my Front End -->
+  <div class="card" onclick="openLink(10)">
+    <div class="icon c-white"><img src="om.png"></div>
+    <div class="card-text">
+      <div class="title">OM my Front End</div>
+      <div class="subtitle">ใช้ภายนอกเชื่อม VPN ก่อนครับ</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+  <!-- NTSP -->
+  <div class="card" onclick="openLink(7)">
+    <div class="icon c-orange"><i class="fas fa-network-wired"></i></div>
+    <div class="card-text">
+      <div class="title">NTSP</div>
+      <div class="subtitle">ระบบ NT Service Platform (TSP)</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+  <!-- WebHR -->
+  <div class="card" onclick="openLink(15)">
+    <div class="icon c-teal"><i class="fas fa-users"></i></div>
+    <div class="card-text">
+      <div class="title">WebHR</div>
+      <div class="subtitle">ระบบบริหารงานบุคคล NT</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+  <div class="section-label">บริการ NT</div>
+
+  <!-- my by NT -->
+  <div class="card" onclick="openLink(9)">
+    <div class="icon c-white"><img src="mybynt.png"></div>
+    <div class="card-text">
+      <div class="title">my by NT</div>
+      <div class="subtitle">เน็ต เร็ว แรง คุ้มค่า ทั่วไทย</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+  <!-- โปรเน็ต Gallery -->
+  <div class="card" onclick="openGallery()">
+    <div class="icon c-red"><i class="fas fa-images"></i></div>
+    <div class="card-text">
+      <div class="title">โปรเน็ตบ้าน &amp; มือถือ</div>
+      <div class="subtitle">โปสเตอร์ประชาสัมพันธ์อินเทอร์เน็ต</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+  <div class="section-label">รายงานและแดชบอร์ด</div>
+
+  <!-- Grafana -->
+  <div class="card" onclick="openLink(12)">
+    <div class="icon c-grafana"><img src="grafana.png" style="filter:brightness(0) invert(1);"></div>
+    <div class="card-text">
+      <div class="title">รายงาน e-Office ภาคเหนือ</div>
+      <div class="subtitle">ภาพรวมความคืบหน้าของระบบ e-Office</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+  <!-- EDM -->
+  <div class="card" onclick="openLink(13)">
+    <div class="icon c-white"><img src="edm.png"></div>
+    <div class="card-text">
+      <div class="title">EDM e-Office</div>
+      <div class="subtitle">ระบบ EDM ติดตามการดำเนินงาน e-Office</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+  <!-- Northern Sale Dashboard -->
+  <div class="card" onclick="openLink(8)">
+    <div class="icon c-green"><i class="fas fa-chart-line"></i></div>
+    <div class="card-text">
+      <div class="title">Northern Sale Dashboard</div>
+      <div class="subtitle">รายงานยอดขายภาคเหนือ</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+  <div class="section-label">บริการประชาชน</div>
+
+  <!-- อสม. -->
+  <div class="card" onclick="openLink(1)">
+    <div class="icon c-cyan"><i class="fas fa-user-nurse"></i></div>
+    <div class="card-text">
+      <div class="title">อสม.</div>
+      <div class="subtitle">ตรวจสอบข้อมูลสาธารณสุข</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+  <!-- สวัสดิการรัฐ -->
+  <div class="card" onclick="openLink(2)">
+    <div class="icon c-green"><i class="fas fa-id-card"></i></div>
+    <div class="card-text">
+      <div class="title">สวัสดิการรัฐ</div>
+      <div class="subtitle">ตรวจสอบสิทธิ์</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+  <!-- ผู้พิการ -->
+  <div class="card" onclick="openLink(3)">
+    <div class="icon c-orange"><i class="fas fa-wheelchair"></i></div>
+    <div class="card-text">
+      <div class="title">ผู้พิการ</div>
+      <div class="subtitle">ตรวจสอบข้อมูลผู้พิการ</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+  <div class="section-label">เครื่องมืออื่นๆ</div>
+
+  <!-- บันทึกการใช้รถยนต์ -->
+  <div class="card" onclick="openLink(4)">
+    <div class="icon c-red"><i class="fas fa-car"></i></div>
+    <div class="card-text">
+      <div class="title">บันทึกการใช้รถยนต์</div>
+      <div class="subtitle">ทะเบียน / การใช้งานรถ</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+  <!-- Driver -->
+  <div class="card" onclick="openLink(14)">
+    <div class="icon c-orange"><i class="fas fa-file"></i></div>
+    <div class="card-text">
+      <div class="title">Driver Printer &amp; Scanner</div>
+      <div class="subtitle">HP LaserJet MFP M72625-M72630</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+  <!-- คู่มือ VPN -->
+  <div class="card" onclick="openVPN()">
+    <div class="icon c-purple"><i class="fas fa-shield-alt"></i></div>
+    <div class="card-text">
+      <div class="title">คู่มือ VPN</div>
+      <div class="subtitle">เปิดคู่มือการใช้งาน VPN</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+</div><!-- /container -->
+
+
+<!-- ─── GALLERY OVERLAY ─── -->
+<div id="gallery">
+  <button class="gallery-close" onclick="closeGallery()">✖ ปิด</button>
+  <div id="galleryImages"></div>
+</div>
+
+<!-- ─── VPN FRAME ─── -->
+<div id="vpnFrame">
+  <button class="overlay-close" onclick="closeVPN()">✖ ปิด</button>
+  <iframe
+    src="https://drive.google.com/file/d/1O1TzrjcdcNYSCF-4rbv3UBF9CoYD7RIZ/preview"
+    style="width:100%; height:100%; border:none;">
+  </iframe>
+</div>
+
+<!-- ─── INSTALL FAB ─── -->
+<button id="manualInstallBtn">📲 ติดตั้งแอป</button>
+
+
+<script>
+const links = [
+  "https://www.thaiphc.net/phc/phcadmin/administrator/Program/OSMPR00001_SEARCH1.php",
+  "https://govwelfare.cgd.go.th/welfare/check",
+  "https://sites.google.com/view/checkdata-pwd/index",
+  "https://artaudio.github.io/WebAppCarRegister-Sale/",
+  "https://drive.google.com/file/d/1O1TzrjcdcNYSCF-4rbv3UBF9CoYD7RIZ/preview",
+  "https://eoffice.ntplc.co.th/",
+  "https://tsp.totbb.net/",
+  "https://script.google.com/macros/s/AKfycbzA4UtW_mKV877qIpKoVZdxojPJrZkpyZAWBvhdg6JeLmLpZLq6XkAiBoK0UMDhmP2y/exec",
+  "https://www.mybynt.com/th/PrePay.php?package=404_my-5G-%E0%B9%80%E0%B8%99%E0%B9%87%E0%B8%95%E0%B9%80",
+  "https://myfrontend.nc.ntplc.co.th/my-frontend/#/dashboard",
+  "https://timesheet.ntplc.co.th/",
+  "https://dashboard.eoffice.go.th/d/deajjevu2sni8a/adf9d79?orgId=1&from=now-90d&to=now&timezone=browser&var-province_id=$__all&var-org_count=1778&var-tag_uuid=$__all&var-count_dla=1690&var-count_moph_obec=88",
+  "https://edm.eoffice.go.th/login",
+  "https://drive.google.com/file/d/1BSSYZWbqkPlVD4vw8YamOA-SN85P7pBM/view?usp=drive_link",
+  "https://webhr.ntplc.co.th/"
+];
+
+function openLink(index) {
+  window.location.href = links[index - 1];
+}
+
+function openVPN() {
+  document.getElementById("vpnFrame").style.display = "block";
+}
+function closeVPN() {
+  document.getElementById("vpnFrame").style.display = "none";
+}
+
+const images = [
+  "img/NT_Fiber_Choice_30-06-2569.jpg",
+  "img/NT_Fiber_Choice2_30-06-2569.jpg",
+  "img/NT-fibercareplus-30-11-2569.jpg",
+  "img/NT_Fiber_Plus_A5 _02-30-06-2569 (2).jpg",
+  "img/NT_Fiber_Plus_A5 _02-30-06-2569 (1).jpg",
+  "img/sawat.jpg",
+  "img/asa.jpg",
+  "img/koc.jpg",
+  "img/mymo.jpg",
+];
+
+function openGallery() {
+  const box = document.getElementById("galleryImages");
+  box.innerHTML = "";
+  images.forEach(src => {
+    const img = document.createElement("img");
+    img.src = src;
+    img.loading = "lazy";
+    img.onclick = () => window.open(src);
+    box.appendChild(img);
+  });
+  document.getElementById("gallery").style.display = "block";
+  document.body.style.overflow = "hidden";
+}
+function closeGallery() {
+  document.getElementById("gallery").style.display = "none";
+  document.body.style.overflow = "";
+}
+</script>
+
+<!-- PWA Install -->
+<script>
+let deferredPrompt;
+window.addEventListener('beforeinstallprompt', (e) => {
+  e.preventDefault();
+  deferredPrompt = e;
+  document.getElementById('manualInstallBtn').style.display = 'block';
+});
+document.getElementById('manualInstallBtn').addEventListener('click', async () => {
+  if (!deferredPrompt) { alert('กรุณาเปิดผ่าน Chrome แล้วเลือก "ติดตั้งแอป"'); return; }
+  deferredPrompt.prompt();
+  const { outcome } = await deferredPrompt.userChoice;
+  console.log(outcome);
+  deferredPrompt = null;
+  document.getElementById('manualInstallBtn').style.display = 'none';
+});
+window.addEventListener('appinstalled', () => {
+  document.getElementById('manualInstallBtn').style.display = 'none';
+});
+</script>
+
+<script>
+const isIOS = /iphone|ipad|ipod/i.test(window.navigator.userAgent);
+if (isIOS) { alert('iPhone: กด แชร์ > เพิ่มไปยังหน้าจอโฮม'); }
+</script>
+
+<script>
+if ('serviceWorker' in navigator) { navigator.serviceWorker.register('./sw.js'); }
+</script>
+
+</body>
+</html>
