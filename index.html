@@ -356,6 +356,26 @@
     <i class="fas fa-chevron-right card-arrow"></i>
   </div>
 
+  <!-- Gallery กลุ่มที่ 2 -->
+  <div class="card" onclick="openGallery('group2')">
+    <div class="icon c-purple"><i class="fas fa-images"></i></div>
+    <div class="card-text">
+      <div class="title">QR Code</div>
+      <div class="subtitle">รูปภาพ QR Code</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+  <!-- โปรเน็ต Gallery -->
+  <div class="card" onclick="openGallery('group1')">
+    <div class="icon c-red"><i class="fas fa-images"></i></div>
+    <div class="card-text">
+      <div class="title">โปรเน็ตบ้าน &amp; มือถือ &amp; ตั้งค่า APN</div>
+      <div class="subtitle">โปสเตอร์ประชาสัมพันธ์อินเทอร์เน็ต</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
   <!-- NTSP -->
   <div class="card" onclick="openLink(this)" data-link="https://tsp.totbb.net/index.php?r=/lead/create">
     <div class="icon c-orange"><i class="fas fa-network-wired"></i></div>
@@ -376,15 +396,6 @@
     <i class="fas fa-chevron-right card-arrow"></i>
   </div>
 
-  <!-- โปรเน็ต Gallery -->
-  <div class="card" onclick="openGallery()">
-    <div class="icon c-red"><i class="fas fa-images"></i></div>
-    <div class="card-text">
-      <div class="title">โปรเน็ตบ้าน &amp; มือถือ &amp; ตั้งค่า APN</div>
-      <div class="subtitle">โปสเตอร์ประชาสัมพันธ์อินเทอร์เน็ต</div>
-    </div>
-    <i class="fas fa-chevron-right card-arrow"></i>
-  </div>
 
   <div class="section-label">ระบบภายใน</div>
 
@@ -584,35 +595,41 @@ function closeVPN() {
   document.getElementById("vpnFrame").style.display = "none";
 }
 
-const images = [
+const imageGroups = {
+  group1: [
+    "img/APN_android.jpg",
+    "img/APN_ios.jpg",
+    "img/NT_Fiber_Choice_30-06-2569.jpg",
+    "img/NT_Fiber_Choice2_30-06-2569.jpg",
+    "img/NT-fibercareplus-30-11-2569.jpg",
+    "img/sawat.jpg",
+    "img/asa.jpg",
+    "img/koc.jpg",
+    "img/mymo.jpg",
+    "img/69%20(3).jpg",
+    "img/69%20(4).jpg",
+    "img/69%20(5).jpg",
+    "img/69%20(7).jpg",
+    "img/69%20(8).jpg",
+    "img/69%20(9).jpg",
+    "img/69%20(10).jpg",
+    "img/69%20(13).jpg",
+    "img/69%20(14).jpg",
+    "img/69%20(15).jpg",
+    "img/69%20(21).jpg",
+    "img/69%20(24).jpg",
+  ],
+  group2: [
+    "qrcode/line_NT_อุตรดิตถ์.jpg",
+    "qrcode/ntprivilege.jpg",
+    "qrcode/facebook_NT_อุตรดิตถ์.jpg",
+  ],
+};
 
-  "img/APN_android.jpg",
-  "img/APN_ios.jpg",
-  "img/NT_Fiber_Choice_30-06-2569.jpg",
-  "img/NT_Fiber_Choice2_30-06-2569.jpg",
-  "img/NT-fibercareplus-30-11-2569.jpg",
-  "img/sawat.jpg",
-  "img/asa.jpg",
-  "img/koc.jpg",
-  "img/mymo.jpg",
-  "img/69%20(3).jpg",
-  "img/69%20(4).jpg",
-  "img/69%20(5).jpg",
-  "img/69%20(7).jpg",
-  "img/69%20(8).jpg",
-  "img/69%20(9).jpg",
-  "img/69%20(10).jpg",
-  "img/69%20(13).jpg",
-  "img/69%20(14).jpg",
-  "img/69%20(15).jpg",
-  "img/69%20(21).jpg",
-  "img/69%20(24).jpg",
-
-];
-
-function openGallery() {
+function openGallery(groupKey) {
   const box = document.getElementById("galleryImages");
   box.innerHTML = "";
+  const images = imageGroups[groupKey] || [];
   images.forEach(src => {
     const img = document.createElement("img");
     img.src = src;
