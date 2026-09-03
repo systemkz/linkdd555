@@ -344,24 +344,14 @@
 <!-- ─── MAIN CONTENT ─── -->
 <div class="container">
 
-  <div class="section-label">กิจกรรม</div>
+  <div class="section-label">กิจกรรม 9.9</div>
 
-  <!-- ONE NT -->
-  <div class="card" onclick="openLink(this)" data-link="https://sites.google.com/view/onent/dashboard">
-    <div class="icon c-yellow"><i class="fas fa-globe"></i></div>
+  <!-- Gallery กลุ่มที่ 3 -->
+  <div class="card" onclick="openGallery('group3')">
+    <div class="icon c-teal"><i class="fas fa-images"></i></div>
     <div class="card-text">
-      <div class="title">ONE NT</div>
-      <div class="subtitle">ONE NT Dashboard</div>
-    </div>
-    <i class="fas fa-chevron-right card-arrow"></i>
-  </div>
-
-  <!-- Gallery กลุ่มที่ 2 -->
-  <div class="card" onclick="openGallery('group2')">
-    <div class="icon c-purple"><i class="fas fa-images"></i></div>
-    <div class="card-text">
-      <div class="title">QR Code</div>
-      <div class="subtitle">รูปภาพ QR Code</div>
+      <div class="title">โปรโมชั่น 9.9</div>
+      <div class="subtitle">มือถือ & เน็ตบ้าน โปรโมชั่น 9.9</div>
     </div>
     <i class="fas fa-chevron-right card-arrow"></i>
   </div>
@@ -372,6 +362,16 @@
     <div class="card-text">
       <div class="title">โปรเน็ตบ้าน &amp; มือถือ &amp; ตั้งค่า APN</div>
       <div class="subtitle">โปสเตอร์ประชาสัมพันธ์อินเทอร์เน็ต</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+  <!-- ค้นหา SDP ขาว -->
+  <div class="card" onclick="openLink(this)" data-link="https://118.174.43.6:8239/sdp_north/login.php">
+    <div class="icon c-cyan"><i class="fas fa-search"></i></div>
+    <div class="card-text">
+      <div class="title">ค้นหา SDP ขาว</div>
+      <div class="subtitle">user : รหัสพนักงาน 8 หลัก / pass : nt123</div>
     </div>
     <i class="fas fa-chevron-right card-arrow"></i>
   </div>
@@ -392,6 +392,29 @@
     <div class="card-text">
       <div class="title">มือถือ&ตามหนี้:Northern Sale Dashboard</div>
       <div class="subtitle">รายงานยอดขายภาคเหนือ</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+
+  <div class="section-label">กิจกรรม</div>
+
+  <!-- ONE NT -->
+  <div class="card" onclick="openLink(this)" data-link="https://sites.google.com/view/onent/dashboard">
+    <div class="icon c-yellow"><i class="fas fa-globe"></i></div>
+    <div class="card-text">
+      <div class="title">ONE NT</div>
+      <div class="subtitle">ONE NT Dashboard</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
+  <!-- Gallery กลุ่มที่ 2 -->
+  <div class="card" onclick="openGallery('group2')">
+    <div class="icon c-purple"><i class="fas fa-images"></i></div>
+    <div class="card-text">
+      <div class="title">QR Code</div>
+      <div class="subtitle">รูปภาพ QR Code</div>
     </div>
     <i class="fas fa-chevron-right card-arrow"></i>
   </div>
@@ -602,7 +625,8 @@ const links = [
   "https://dashboard.eoffice.go.th/d/deajjevu2sni8a/adf9d79?orgId=1&from=now-90d&to=now&timezone=browser&var-province_id=$__all&var-org_count=1778&var-tag_uuid=$__all&var-count_dla=1690&var-count_moph_obec=88",
   "https://edm.eoffice.go.th/login",
   "https://drive.google.com/file/d/1BSSYZWbqkPlVD4vw8YamOA-SN85P7pBM/view?usp=drive_link",
-  "https://webhr.ntplc.co.th/"
+  "https://webhr.ntplc.co.th/",
+  "https://118.174.43.6:8239/sdp_north/login.php"
 ];
 
 function openLink(el) {
@@ -645,6 +669,12 @@ const imageGroups = {
     "qrcode/ntprivilege.jpg",
     "qrcode/facebook_NT_อุตรดิตถ์.jpg",
     "qrcode/NT_Uttaradit.jpg",
+  ],
+  group3: [
+    "256909_pro/1788406153447.jpg",
+    "256909_pro/1788407333315.jpg",
+    "256909_pro/1788407439522.jpg",
+    "256909_pro/1788408995326.jpg",
   ],
 };
 
