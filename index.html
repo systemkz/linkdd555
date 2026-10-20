@@ -216,6 +216,35 @@
   .c-white  { background: #f9f9f9; border: 1px solid #e5e7eb; }
   .c-grafana { background: linear-gradient(135deg, #F46800, #c85200); }
 
+  /* ─── SUBMENU ─── */
+  .card.has-sub .card-arrow { transition: transform 0.25s ease; }
+  .card.has-sub.open .card-arrow { transform: rotate(90deg); }
+  .submenu {
+    display: none;
+    margin: -2px 0 11px 26px;
+    padding-left: 14px;
+    border-left: 3px solid var(--yellow);
+  }
+  .submenu.open { display: block; animation: slideUp 0.25s ease both; }
+  .sub-card {
+    background: var(--card-bg);
+    border-radius: var(--radius-sm);
+    padding: 11px 14px;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    box-shadow: var(--shadow);
+    cursor: pointer;
+    border: 1px solid rgba(0,0,0,0.04);
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+  }
+  .sub-card:hover { transform: translateY(-2px); box-shadow: var(--shadow-hover); }
+  .sub-card:active { transform: scale(0.975); }
+  .sub-card .icon { width: 40px; height: 40px; border-radius: 12px; font-size: 17px; }
+  .sub-card .title { font-size: 16px; }
+  .sub-card .subtitle { font-size: 14px; }
+
   /* ─── GALLERY OVERLAY ─── */
   #gallery {
     display: none;
@@ -590,14 +619,73 @@
     <i class="fas fa-chevron-right card-arrow"></i>
   </div>
 
-  <!-- เกมจับรางวัล -->
-  <div class="card" onclick="openLink(this)" data-link="https://systemkz.github.io/lucky-draw/">
+  <!-- เกมจับรางวัล (เมนูย่อย) -->
+  <div class="card has-sub" id="luckyCard" onclick="toggleSubmenu('luckySub', this)">
     <div class="icon c-yellow"><i class="fas fa-dice"></i></div>
     <div class="card-text">
       <div class="title">เกมจับรางวัล</div>
-      <div class="subtitle">สุ่มรายชื่อผู้โชคดี</div>
+      <div class="subtitle">แตะเพื่อเลือกเกม</div>
     </div>
     <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+  <div class="submenu" id="luckySub">
+
+    <!-- เกมย่อย 1 -->
+    <div class="sub-card" onclick="openLink(this)" data-link="games/lucky-draw.html">
+      <div class="icon c-yellow"><i class="fas fa-dice"></i></div>
+      <div class="card-text">
+        <div class="title">เกมจับรางวัล</div>
+        <div class="subtitle">lucky-draw</div>
+      </div>
+      <i class="fas fa-chevron-right card-arrow"></i>
+    </div>
+
+    <div class="sub-card" onclick="openLink(this)" data-link="games/lucky-draw2.html">
+      <div class="icon c-yellow"><i class="fas fa-dice"></i></div>
+      <div class="card-text">
+        <div class="title">จับสลากรางวัล</div>
+        <div class="subtitle">lucky-draw2</div>
+      </div>
+      <i class="fas fa-chevron-right card-arrow"></i>
+    </div>
+
+    <div class="sub-card" onclick="openLink(this)" data-link="games/lucky-cards.html">
+      <div class="icon c-yellow"><i class="fas fa-dice"></i></div>
+      <div class="card-text">
+        <div class="title">เปิดการ์ดจับสลาก</div>
+        <div class="subtitle">lucky-cards</div>
+      </div>
+      <i class="fas fa-chevron-right card-arrow"></i>
+    </div>
+
+    <div class="sub-card" onclick="openLink(this)" data-link="games/lucky-gacha.html">
+      <div class="icon c-yellow"><i class="fas fa-dice"></i></div>
+      <div class="card-text">
+        <div class="title">ตู้กาชาปอง</div>
+        <div class="subtitle">lucky-gacha</div>
+      </div>
+      <i class="fas fa-chevron-right card-arrow"></i>
+    </div>
+
+    <div class="sub-card" onclick="openLink(this)" data-link="games/lucky-race.html">
+      <div class="icon c-yellow"><i class="fas fa-dice"></i></div>
+      <div class="card-text">
+        <div class="title">ม้าแข่งจับสลาก</div>
+        <div class="subtitle">lucky-race</div>
+      </div>
+      <i class="fas fa-chevron-right card-arrow"></i>
+    </div>
+
+    <div class="sub-card" onclick="openLink(this)" data-link="games/lucky-wheel.html">
+      <div class="icon c-yellow"><i class="fas fa-dice"></i></div>
+      <div class="card-text">
+        <div class="title">วงล้อจับสลาก</div>
+        <div class="subtitle">lucky-wheel</div>
+      </div>
+      <i class="fas fa-chevron-right card-arrow"></i>
+    </div>
+
+
   </div>
 
   <!-- ตอบแบบสอบถาม -->
@@ -702,6 +790,12 @@ const links = [
 
 function openLink(el) {
   window.location.href = el.dataset.link;
+}
+
+function toggleSubmenu(id, card) {
+  const sub = document.getElementById(id);
+  const open = sub.classList.toggle('open');
+  card.classList.toggle('open', open);
 }
 
 function openVPN() {
