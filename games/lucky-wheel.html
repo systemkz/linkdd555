@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>วงล้อจับสลาก</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--text:#1d2433;--muted:#6b7385;--accent:#e8512f;--line:#dfe3ee;--win:#fff4d6}
+@media (prefers-color-scheme:dark){:root{--bg:#14171f;--card:#1e222c;--text:#eef0f6;--muted:#9aa2b5;--accent:#ff7a59;--line:#333a4a;--win:#3a3217}}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Noto Sans Thai","Sarabun",system-ui,sans-serif;background:var(--bg);color:var(--text);padding:20px}
+.wrap{max-width:1000px;margin:0 auto;display:grid;gap:16px;grid-template-columns:1.3fr 1fr}
+@media(max-width:760px){.wrap{grid-template-columns:1fr}}
+h1{grid-column:1/-1;text-align:center;margin:8px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.wheelbox{position:relative;width:100%;max-width:520px;margin:0 auto}
+canvas{width:100%;height:auto;display:block}
+.pointer{position:absolute;top:-6px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:16px solid transparent;border-right:16px solid transparent;border-top:34px solid var(--accent);filter:drop-shadow(0 2px 2px rgba(0,0,0,.3));z-index:2}
+.result{margin:14px 0 0;text-align:center;font-size:30px;font-weight:700;min-height:64px;padding:12px;border-radius:12px;background:var(--bg);word-break:break-word}
+.result.done{background:var(--win);color:var(--accent)}
+label{font-size:14px;color:var(--muted);display:block;margin-bottom:6px}
+textarea{width:100%;height:260px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit;resize:vertical}
+.chk{display:flex;gap:8px;align-items:center;margin:10px 0;color:var(--text);font-size:15px}
+.row{display:flex;gap:8px;margin-top:10px}
+button{flex:1;padding:12px;border:0;border-radius:10px;background:var(--accent);color:#fff;font:inherit;font-weight:600;cursor:pointer}
+button.sec{background:var(--line);color:var(--text)}
+button:disabled{opacity:.5;cursor:not-allowed}
+ol{padding-left:28px;margin:8px 0 0}
+li{padding:5px 0;border-bottom:1px dashed var(--line)}
+h3{margin:16px 0 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🎡 วงล้อจับสลาก</h1>
+
+  <div class="card">
+    <div class="wheelbox">
+      <div class="pointer"></div>
+      <canvas id="wheel" width="600" height="600"></canvas>
+    </div>
+    <div class="result" id="result">กดหมุนวงล้อได้เลย</div>
+    <div class="row">
+      <button id="spin">🎯 หมุนวงล้อ</button>
+      <button id="reset" class="sec">เริ่มใหม่</button>
+    </div>
+  </div>
+
+  <div class="card">
+    <label for="names">รายชื่อผู้เข้าร่วม (บรรทัดละ 1 คน)</label>
+    <textarea id="names"></textarea>
+    <label class="chk"><input type="checkbox" id="remove" checked> เอาผู้ที่ได้รางวัลแล้วออกจากวงล้อ</label>
+    <h3>ผู้โชคดี</h3>
+    <ol id="winners"></ol>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const cv = $("wheel"), ctx = cv.getContext("2d");
+const namesEl = $("names"), result = $("result"), btn = $("spin"), list = $("winners");
+namesEl.value = Array.from({length:20},(_,i)=>"ผู้เข้าร่วมคนที่ "+(i+1)).join("\n");
+
+const TAU = Math.PI*2;
+let pool = [], winners = [], rot = 0, busy = false;
+
+const parse = () => namesEl.value.split("\n").map(s=>s.trim()).filter(Boolean);
+function rnd(){ const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0]/4294967296; }
+
+function draw(){
+  const W = cv.width, c = W/2, r = c-8, n = pool.length;
+  ctx.clearRect(0,0,W,W);
+  if (!n){
+    ctx.fillStyle = "#999"; ctx.font = "28px sans-serif"; ctx.textAlign = "center";
+    ctx.fillText("ไม่มีรายชื่อ", c, c); return;
+  }
+  const arc = TAU/n;
+  for (let i=0;i<n;i++){
+    const a0 = rot + i*arc;
+    ctx.beginPath(); ctx.moveTo(c,c); ctx.arc(c,c,r,a0,a0+arc); ctx.closePath();
+    ctx.fillStyle = `hsl(${(i*360/n*1.0)%360},70%,${i%2?52:60}%)`;
+    ctx.fill(); ctx.strokeStyle = "#fff"; ctx.lineWidth = 2; ctx.stroke();
+    ctx.save(); ctx.translate(c,c); ctx.rotate(a0+arc/2);
+    ctx.fillStyle = "#fff"; ctx.textAlign = "right"; ctx.textBaseline = "middle";
+    ctx.font = `bold ${Math.max(14, Math.min(26, 420/n))}px "Noto Sans Thai",sans-serif`;
+    ctx.shadowColor = "rgba(0,0,0,.45)"; ctx.shadowBlur = 3;
+    let t = pool[i]; if (t.length > 16) t = t.slice(0,15)+"…";
+    ctx.fillText(t, r-18, 0); ctx.restore();
+  }
+  ctx.beginPath(); ctx.arc(c,c,26,0,TAU); ctx.fillStyle = "#fff"; ctx.fill();
+  ctx.strokeStyle = "#e8512f"; ctx.lineWidth = 6; ctx.stroke();
+}
+
+function renderWinners(){
+  list.innerHTML = "";
+  winners.forEach(w => { const li = document.createElement("li"); li.textContent = w; list.appendChild(li); });
+}
+
+function load(){ pool = parse(); rot = 0; draw(); }
+namesEl.addEventListener("input", ()=>{ if(!busy){ winners.length || load(); if(winners.length){ pool = parse().filter(x=>!winners.includes(x)||!$("remove").checked); draw(); } } });
+
+btn.addEventListener("click", ()=>{
+  if (busy || !pool.length) return;
+  busy = true; btn.disabled = true; result.classList.remove("done");
+  result.textContent = "กำลังหมุน...";
+  const n = pool.length, arc = TAU/n;
+  const idx = Math.floor(rnd()*n);
+  const offset = (rnd()-0.5)*0.7*arc;
+  const target = -Math.PI/2 - (idx+0.5)*arc + offset;
+  const start = rot;
+  const delta = (((target - start) % TAU) + TAU) % TAU + TAU*(6+Math.floor(rnd()*3));
+  const dur = 6000, t0 = performance.now();
+  (function frame(now){
+    const p = Math.min(1,(now-t0)/dur), e = 1-Math.pow(1-p,4);
+    rot = start + delta*e; draw();
+    if (p < 1) return requestAnimationFrame(frame);
+    const w = pool[idx];
+    winners.push(w); renderWinners();
+    result.textContent = "🎉 " + w; result.classList.add("done");
+    if ($("remove").checked){ pool.splice(idx,1); rot = rot % TAU; draw(); }
+    busy = false; btn.disabled = false;
+  })(t0);
+});
+
+$("reset").addEventListener("click", ()=>{
+  if (busy) return;
+  winners = []; renderWinners(); load();
+  result.classList.remove("done"); result.textContent = "กดหมุนวงล้อได้เลย";
+});
+
+load();
+</script>
+</body>
+</html>

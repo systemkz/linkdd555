@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>จับสลากรางวัล</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--text:#1d2433;--muted:#6b7385;--accent:#e8512f;--line:#dfe3ee;--win:#fff4d6}
+@media (prefers-color-scheme:dark){:root{--bg:#14171f;--card:#1e222c;--text:#eef0f6;--muted:#9aa2b5;--accent:#ff7a59;--line:#333a4a;--win:#3a3217}}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Noto Sans Thai","Sarabun",system-ui,sans-serif;background:var(--bg);color:var(--text);padding:20px}
+.wrap{max-width:900px;margin:0 auto;display:grid;gap:16px;grid-template-columns:1fr 1fr}
+@media(max-width:700px){.wrap{grid-template-columns:1fr}}
+h1{grid-column:1/-1;text-align:center;margin:8px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+label{font-size:14px;color:var(--muted);display:block;margin-bottom:6px}
+textarea,input{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
+textarea{height:300px;resize:vertical}
+.row{display:flex;gap:8px;margin-top:10px}
+button{flex:1;padding:12px;border:0;border-radius:10px;background:var(--accent);color:#fff;font:inherit;font-weight:600;cursor:pointer}
+button.sec{background:var(--line);color:var(--text)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.stage{font-size:44px;font-weight:700;text-align:center;padding:36px 8px;border-radius:12px;background:var(--bg);min-height:120px;display:flex;align-items:center;justify-content:center;word-break:break-word}
+.stage.done{background:var(--win);color:var(--accent)}
+ol{padding-left:28px;margin:0}
+li{padding:6px 0;border-bottom:1px dashed var(--line)}
+.meta{color:var(--muted);font-size:14px;margin:10px 0 0}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🎁 จับสลากรางวัล</h1>
+
+  <div class="card">
+    <label for="names">รายชื่อผู้เข้าร่วม (บรรทัดละ 1 คน)</label>
+    <textarea id="names"></textarea>
+    <div class="row" style="align-items:end">
+      <div style="flex:1"><label for="count">จำนวนรางวัล</label><input id="count" type="number" min="1" value="1"></div>
+    </div>
+    <p class="meta" id="info"></p>
+  </div>
+
+  <div class="card">
+    <div class="stage" id="stage">พร้อมจับสลาก</div>
+    <div class="row">
+      <button id="draw">จับสลาก</button>
+      <button id="reset" class="sec">เริ่มใหม่</button>
+    </div>
+    <h3>ผู้โชคดี</h3>
+    <ol id="winners"></ol>
+  </div>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const namesEl = $("names"), stage = $("stage"), list = $("winners"), btn = $("draw");
+namesEl.value = Array.from({length:20},(_,i)=>"ผู้เข้าร่วมคนที่ "+(i+1)).join("\n");
+
+let pool = [], winners = [], busy = false;
+
+function parse(){ return namesEl.value.split("\n").map(s=>s.trim()).filter(Boolean); }
+function rnd(n){ const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; }
+
+function sync(){
+  if (!winners.length) pool = parse();
+  $("info").textContent = `ผู้เข้าร่วม ${parse().length} คน • เหลือในกล่อง ${pool.length} คน • จับแล้ว ${winners.length} รางวัล`;
+}
+namesEl.addEventListener("input", ()=>{ if(!winners.length) sync(); });
+
+function render(){
+  list.innerHTML = "";
+  winners.forEach(w => { const li = document.createElement("li"); li.textContent = w; list.appendChild(li); });
+  sync();
+}
+
+btn.addEventListener("click", ()=>{
+  if (busy) return;
+  if (!winners.length) pool = parse();
+  const total = Math.max(1, parseInt($("count").value) || 1);
+  if (!pool.length) { stage.textContent = "ไม่มีรายชื่อเหลือแล้ว"; return; }
+  if (winners.length >= total) { stage.textContent = "จับครบทุกรางวัลแล้ว 🎉"; return; }
+
+  busy = true; btn.disabled = true; stage.classList.remove("done");
+  const pick = rnd(pool.length);
+  let ticks = 0;
+  const t = setInterval(()=>{
+    stage.textContent = pool[rnd(pool.length)];
+    if (++ticks >= 30) {
+      clearInterval(t);
+      const w = pool.splice(pick,1)[0];
+      winners.push(w);
+      stage.textContent = w; stage.classList.add("done");
+      render(); busy = false; btn.disabled = false;
+    }
+  }, 70);
+});
+
+$("reset").addEventListener("click", ()=>{
+  if (busy) return;
+  winners = []; pool = parse(); stage.classList.remove("done");
+  stage.textContent = "พร้อมจับสลาก"; render();
+});
+
+sync();
+</script>
+</body>
+</html>

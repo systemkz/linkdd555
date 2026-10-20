@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ตู้กาชาปอง</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--text:#1d2433;--muted:#6b7385;--accent:#e8512f;--line:#dfe3ee}
+@media (prefers-color-scheme:dark){:root{--bg:#14171f;--card:#1e222c;--text:#eef0f6;--muted:#9aa2b5;--accent:#ff7a59;--line:#333a4a}}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Noto Sans Thai","Sarabun",system-ui,sans-serif;background:var(--bg);color:var(--text);padding:16px}
+.wrap{max-width:960px;margin:0 auto;display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
+@media(max-width:760px){.wrap{grid-template-columns:1fr}}
+h1{grid-column:1/-1;text-align:center;margin:6px 0}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px}
+.machine{max-width:460px;margin:0 auto;text-align:center}
+canvas{width:100%;height:auto;display:block}
+.machine.shake{animation:shake .12s infinite}
+@keyframes shake{0%{transform:translate(0,0)}25%{transform:translate(-5px,2px) rotate(-.6deg)}50%{transform:translate(4px,-3px) rotate(.6deg)}75%{transform:translate(-3px,-2px)}100%{transform:translate(0,0)}}
+.base{background:linear-gradient(#e8512f,#b8381a);border-radius:0 0 22px 22px;margin:-6px 8% 0;padding:14px 10px 18px;color:#fff}
+.chute{width:90px;height:26px;margin:8px auto 0;background:#00000055;border-radius:8px}
+button{padding:12px 20px;border:0;border-radius:10px;background:var(--accent);color:#fff;font:inherit;font-weight:700;cursor:pointer}
+button.sec{background:var(--line);color:var(--text)}
+button.knob{background:#ffd54a;color:#5a3b00;font-size:18px;border-radius:999px;padding:12px 28px}
+button:disabled{opacity:.5;cursor:not-allowed}
+label{display:block;font-size:14px;color:var(--muted);margin:0 0 6px}
+textarea{width:100%;height:220px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit;resize:vertical}
+.chk{display:flex;gap:8px;align-items:center;margin:10px 0;color:var(--text);font-size:15px}
+h3{margin:14px 0 0}
+ol{padding-left:28px;margin:8px 0 0}
+li{padding:5px 0;border-bottom:1px dashed var(--line)}
+.row{display:flex;gap:8px;margin-top:10px}
+.row button{flex:1}
+/* reveal overlay */
+#ov{position:fixed;inset:0;background:rgba(10,8,25,.8);display:none;align-items:center;justify-content:center;flex-direction:column;z-index:20;color:#fff;text-align:center;padding:20px}
+#ov.show{display:flex}
+.cap{position:relative;width:140px;height:140px}
+.half{position:absolute;left:0;width:140px;height:70px;transition:transform .7s ease}
+.half.t{top:0;border-radius:70px 70px 0 0;transform-origin:bottom}
+.half.b{bottom:0;background:#fff;border-radius:0 0 70px 70px}
+.cap.wob{animation:wob .9s ease-in-out}
+.cap.open .t{transform:translateY(-60px) rotate(-25deg)}
+.cap.open .b{transform:translateY(40px) rotate(15deg)}
+@keyframes wob{0%,100%{transform:rotate(0)}20%{transform:rotate(-18deg)}40%{transform:rotate(16deg)}60%{transform:rotate(-12deg)}80%{transform:rotate(10deg)}}
+#nm{font-size:clamp(36px,9vw,110px);font-weight:800;margin-top:26px;opacity:0;transform:scale(.3);transition:all .6s cubic-bezier(.2,1.4,.4,1);text-shadow:0 0 30px #ff7a59;word-break:break-word;max-width:95vw}
+#nm.show{opacity:1;transform:scale(1)}
+#close{margin-top:22px;display:none}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:30}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div class="wrap">
+  <h1>🎰 ตู้กาชาปอง</h1>
+
+  <div class="card">
+    <div class="machine" id="machine">
+      <canvas id="cv" width="500" height="500"></canvas>
+      <div class="base">
+        <button class="knob" id="spin">🌀 หมุนกาชาปอง</button>
+        <div class="chute"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <label for="names">รายชื่อผู้เข้าร่วม (บรรทัดละ 1 คน)</label>
+    <textarea id="names"></textarea>
+    <label class="chk"><input type="checkbox" id="remove" checked> เอาแคปซูลที่จับได้แล้วออกจากตู้</label>
+    <div class="row"><button class="sec" id="reset">เริ่มใหม่</button></div>
+    <h3>ผู้โชคดี</h3>
+    <ol id="winners"></ol>
+  </div>
+</div>
+
+<div id="ov">
+  <div class="cap" id="cap"><div class="half t" id="ct"></div><div class="half b"></div></div>
+  <div id="nm"></div>
+  <button id="close">ปิด</button>
+</div>
+
+<script>
+const $ = id => document.getElementById(id);
+const cv = $("cv"), ctx = cv.getContext("2d");
+$("names").value = Array.from({length:20},(_,i)=>"ผู้เข้าร่วมคนที่ "+(i+1)).join("\n");
+
+const CX = 250, CY = 240, R = 220;
+let caps = [], winners = [], busy = false, shakeUntil = 0, drop = null, rad = 26;
+const parse = () => $("names").value.split("\n").map(s=>s.trim()).filter(Boolean);
+function rnd(n){ const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; }
+const hue = i => (i*47)%360;
+
+function placeCap(c){
+  const a = Math.random()*Math.PI*2, d = Math.random()*(R-rad-20);
+  c.x = CX + Math.cos(a)*d; c.y = CY + Math.sin(a)*d*0.6 - 40; c.vx = 0; c.vy = 0; c.rot = Math.random()*6;
+}
+function build(){
+  const names = parse();
+  rad = Math.max(13, Math.min(28, 125/Math.sqrt(names.length||1)));
+  caps = names.map((n,i)=>{ const c = {name:n,h:hue(i)}; placeCap(c); return c; });
+}
+
+function step(now){
+  const shaking = now < shakeUntil;
+  for (const c of caps){
+    if (c === (drop&&drop.c)) continue;
+    c.vy += 0.35;
+    if (shaking){ c.vx += (Math.random()-.5)*5; c.vy -= Math.random()*2.2; }
+    c.x += c.vx; c.y += c.vy; c.vx *= .99; c.vy *= .99; c.rot += c.vx*0.03;
+    const dx = c.x-CX, dy = c.y-CY, d = Math.hypot(dx,dy), lim = R-rad-6;
+    if (d > lim){
+      const nx = dx/d, ny = dy/d, dot = c.vx*nx + c.vy*ny;
+      c.x = CX + nx*lim; c.y = CY + ny*lim;
+      if (dot > 0){ c.vx -= 1.6*dot*nx; c.vy -= 1.6*dot*ny; }
+    }
+  }
+  for (let i=0;i<caps.length;i++) for (let j=i+1;j<caps.length;j++){
+    const a = caps[i], b = caps[j];
+    if ((drop&&(drop.c===a||drop.c===b))) continue;
+    const dx = b.x-a.x, dy = b.y-a.y, d = Math.hypot(dx,dy)||0.01, m = rad*2;
+    if (d < m){
+      const nx = dx/d, ny = dy/d, o = (m-d)/2;
+      a.x -= nx*o; a.y -= ny*o; b.x += nx*o; b.y += ny*o;
+      const rv = (b.vx-a.vx)*nx + (b.vy-a.vy)*ny;
+      if (rv < 0){ a.vx += rv*nx*.6; a.vy += rv*ny*.6; b.vx -= rv*nx*.6; b.vy -= rv*ny*.6; }
+    }
+  }
+}
+
+function capsule(c, x, y, r, rot){
+  ctx.save(); ctx.translate(x,y); ctx.rotate(rot);
+  ctx.beginPath(); ctx.arc(0,0,r,Math.PI,0); ctx.fillStyle = `hsl(${c.h},80%,55%)`; ctx.fill();
+  ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI); ctx.fillStyle = "#fff"; ctx.fill();
+  ctx.lineWidth = 1.5; ctx.strokeStyle = "rgba(0,0,0,.35)"; ctx.beginPath(); ctx.arc(0,0,r,0,Math.PI*2); ctx.moveTo(-r,0); ctx.lineTo(r,0); ctx.stroke();
+  ctx.fillStyle = "rgba(255,255,255,.5)"; ctx.beginPath(); ctx.ellipse(-r*.35,-r*.45,r*.18,r*.1,-.6,0,Math.PI*2); ctx.fill();
+  ctx.restore();
+}
+
+function render(){
+  ctx.clearRect(0,0,500,500);
+  const g = ctx.createRadialGradient(CX-60,CY-80,20,CX,CY,R);
+  g.addColorStop(0,"rgba(255,255,255,.35)"); g.addColorStop(1,"rgba(120,160,220,.25)");
+  ctx.beginPath(); ctx.arc(CX,CY,R,0,Math.PI*2); ctx.fillStyle = g; ctx.fill();
+  ctx.lineWidth = 6; ctx.strokeStyle = "rgba(160,180,220,.8)"; ctx.stroke();
+  caps.forEach(c => { if (!(drop && drop.c===c)) capsule(c,c.x,c.y,rad,c.rot); });
+  if (drop) capsule(drop.c, drop.c.x, drop.c.y, rad*1.25, drop.c.rot);
+}
+
+function loop(now){
+  step(now);
+  if (drop){
+    const p = Math.min(1,(now-drop.t0)/900), e = p*p;
+    drop.c.x = drop.x0 + (CX-drop.x0)*e; drop.c.y = drop.y0 + (CY+R-10-drop.y0)*e; drop.c.rot += .15;
+    if (p >= 1 && !drop.done){ drop.done = true; reveal(drop.c); }
+  }
+  render(); requestAnimationFrame(loop);
+}
+
+$("spin").addEventListener("click", ()=>{
+  if (busy || !caps.length) return;
+  busy = true; $("spin").disabled = true;
+  $("machine").classList.add("shake"); shakeUntil = performance.now()+2000;
+  setTimeout(()=>{
+    $("machine").classList.remove("shake");
+    const c = caps[rnd(caps.length)];
+    drop = {c, x0:c.x, y0:c.y, t0:performance.now(), done:false};
+  }, 2100);
+});
+
+function reveal(c){
+  $("ct").style.background = `hsl(${c.h},80%,55%)`;
+  const cap = $("cap"), nm = $("nm");
+  cap.className = "cap"; nm.className = ""; nm.textContent = c.name; $("close").style.display = "none";
+  $("ov").classList.add("show"); void cap.offsetWidth; cap.classList.add("wob");
+  setTimeout(()=>{ cap.classList.add("open"); nm.classList.add("show"); boom(); $("close").style.display = "inline-block"; }, 1000);
+  winners.push(c.name);
+  const li = document.createElement("li"); li.textContent = c.name; $("winners").appendChild(li);
+}
+
+$("close").addEventListener("click", ()=>{
+  $("ov").classList.remove("show");
+  if ($("remove").checked) caps = caps.filter(c => c !== drop.c); else placeCap(drop.c);
+  drop = null; busy = false; $("spin").disabled = !caps.length;
+});
+
+$("reset").addEventListener("click", ()=>{
+  if (busy) return;
+  winners = []; $("winners").innerHTML = ""; build(); $("spin").disabled = false;
+});
+$("names").addEventListener("input", ()=>{ if(!busy && !winners.length) build(); });
+
+/* confetti */
+const cf = $("confetti"), cx = cf.getContext("2d"); let parts = [], raf = 0;
+function size(){ cf.width = innerWidth; cf.height = innerHeight; } size(); addEventListener("resize", size);
+function boom(){
+  for (let i=0;i<150;i++) parts.push({x:cf.width/2,y:cf.height/2,vx:(Math.random()-.5)*20,vy:-Math.random()*18-3,
+    s:6+Math.random()*7,c:`hsl(${Math.random()*360},90%,60%)`,r:Math.random()*6,vr:(Math.random()-.5)*.4,life:130+Math.random()*50});
+  if (!raf) raf = requestAnimationFrame(tick);
+}
+function tick(){
+  cx.clearRect(0,0,cf.width,cf.height);
+  parts = parts.filter(p => p.life-- > 0 && p.y < cf.height+20);
+  parts.forEach(p => { p.vy += .42; p.x += p.vx; p.y += p.vy; p.vx *= .99; p.r += p.vr;
+    cx.save(); cx.translate(p.x,p.y); cx.rotate(p.r); cx.fillStyle = p.c; cx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); cx.restore(); });
+  raf = parts.length ? requestAnimationFrame(tick) : 0;
+}
+
+build(); requestAnimationFrame(loop);
+</script>
+</body>
+</html>

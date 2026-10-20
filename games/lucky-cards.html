@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>เปิดการ์ดจับสลาก</title>
+<style>
+:root{--bg:#f6f7fb;--card:#fff;--text:#1d2433;--muted:#6b7385;--accent:#e8512f;--line:#dfe3ee}
+@media (prefers-color-scheme:dark){:root{--bg:#14171f;--card:#1e222c;--text:#eef0f6;--muted:#9aa2b5;--accent:#ff7a59;--line:#333a4a}}
+*{box-sizing:border-box}
+body{margin:0;font-family:"Noto Sans Thai","Sarabun",system-ui,sans-serif;background:var(--bg);color:var(--text);padding:16px}
+.top{max-width:960px;margin:0 auto}
+h1{text-align:center;margin:6px 0}
+.banner{text-align:center;font-size:clamp(22px,4vw,38px);font-weight:700;min-height:64px;padding:10px;border-radius:12px;background:var(--card);border:1px solid var(--line);margin:10px 0;word-break:break-word}
+.banner.win{color:var(--accent)}
+.meta{text-align:center;color:var(--muted);font-size:14px;margin-bottom:10px}
+.grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;max-width:960px;margin:0 auto}
+@media(max-width:600px){.grid{grid-template-columns:repeat(4,1fr);gap:8px}}
+.slot{perspective:800px;aspect-ratio:3/4;cursor:pointer}
+.inner{position:relative;width:100%;height:100%;transition:transform .7s cubic-bezier(.3,1.3,.5,1);transform-style:preserve-3d}
+.slot.open .inner{transform:rotateY(180deg)}
+.slot:not(.open):hover .inner{transform:translateY(-6px) rotate(-2deg)}
+.face{position:absolute;inset:0;border-radius:12px;backface-visibility:hidden;display:flex;align-items:center;justify-content:center;text-align:center;padding:6px;box-shadow:0 3px 8px rgba(0,0,0,.2)}
+.back{background:repeating-linear-gradient(45deg,#e8512f,#e8512f 10px,#d1401f 10px,#d1401f 20px);color:#fff;font-size:clamp(22px,4vw,40px);font-weight:800;border:3px solid #fff}
+.front{transform:rotateY(180deg);background:var(--card);border:3px solid var(--line);font-size:clamp(13px,2vw,20px);font-weight:700;word-break:break-word}
+.front.prize{background:#fff4d6;color:#b8470f;border-color:#f5b400}
+.front.blank{color:var(--muted)}
+@media (prefers-color-scheme:dark){.front.prize{background:#3a3217;color:#ffb347}}
+.tools{display:flex;gap:8px;justify-content:center;margin:14px 0}
+button{padding:10px 18px;border:0;border-radius:10px;background:var(--accent);color:#fff;font:inherit;font-weight:600;cursor:pointer}
+button.sec{background:var(--line);color:var(--text)}
+dialog{border:0;border-radius:16px;padding:20px;width:min(480px,92vw);background:var(--card);color:var(--text)}
+dialog::backdrop{background:rgba(0,0,0,.5)}
+label{display:block;font-size:14px;color:var(--muted);margin:10px 0 6px}
+textarea,input{width:100%;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--text);font:inherit}
+textarea{height:180px}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:50}
+</style>
+</head>
+<body>
+<canvas id="confetti"></canvas>
+<div class="top">
+  <h1>🃏 เปิดการ์ดจับสลาก</h1>
+  <div class="banner" id="banner">เลือกการ์ดได้เลย 1 ใบ</div>
+  <div class="meta" id="meta"></div>
+</div>
+<div class="grid" id="grid"></div>
+<div class="tools">
+  <button id="shuffle">🔀 สับไพ่ใหม่</button>
+  <button class="sec" id="cfg">⚙ ตั้งค่า</button>
+</div>
+
+<dialog id="dlg">
+  <h2 style="margin:0">ตั้งค่า</h2>
+  <label for="cards">จำนวนการ์ด</label>
+  <input id="cards" type="number" min="2" max="60" value="20">
+  <label for="prizes">รายการรางวัล (บรรทัดละ 1 รางวัล) — การ์ดที่เหลือจะเป็น "เสียใจด้วย"</label>
+  <textarea id="prizes"></textarea>
+  <p style="text-align:right;margin:14px 0 0"><button id="ok">ตกลง</button></p>
+</dialog>
+
+<script>
+const $ = id => document.getElementById(id);
+$("prizes").value = ["รางวัลที่ 1","รางวัลที่ 2","รางวัลที่ 3","รางวัลที่ 4","รางวัลที่ 5"].join("\n");
+
+let deck = [], opened = 0, prizeLeft = 0;
+function rnd(n){ const a = new Uint32Array(1); crypto.getRandomValues(a); return a[0] % n; }
+
+function build(){
+  const n = Math.max(2, Math.min(60, parseInt($("cards").value)||20));
+  const prizes = $("prizes").value.split("\n").map(s=>s.trim()).filter(Boolean).slice(0,n);
+  deck = prizes.map(p=>({t:p,prize:true}));
+  while (deck.length < n) deck.push({t:"เสียใจด้วย 😅",prize:false});
+  for (let i=n-1;i>0;i--){ const j = rnd(i+1); [deck[i],deck[j]] = [deck[j],deck[i]]; }
+  opened = 0; prizeLeft = prizes.length;
+  const g = $("grid"); g.innerHTML = "";
+  deck.forEach((c,i)=>{
+    const s = document.createElement("div"); s.className = "slot";
+    s.innerHTML = `<div class="inner"><div class="face back">${i+1}</div><div class="face front ${c.prize?"prize":"blank"}"></div></div>`;
+    s.querySelector(".front").textContent = c.t;
+    s.addEventListener("click", ()=>flip(s,c,i));
+    g.appendChild(s);
+  });
+  $("banner").className = "banner"; $("banner").textContent = "เลือกการ์ดได้เลย 1 ใบ";
+  meta();
+}
+function meta(){ $("meta").textContent = `เปิดแล้ว ${opened}/${deck.length} ใบ • รางวัลที่ยังไม่ถูกเปิด ${prizeLeft}`; }
+
+function flip(s,c,i){
+  if (s.classList.contains("open")) return;
+  s.classList.add("open"); opened++; if (c.prize) prizeLeft--;
+  const b = $("banner");
+  b.textContent = c.prize ? `🎉 การ์ดใบที่ ${i+1}: ${c.t}` : `การ์ดใบที่ ${i+1}: ${c.t}`;
+  b.className = "banner" + (c.prize ? " win" : "");
+  if (c.prize) boom(); meta();
+}
+
+$("shuffle").onclick = build;
+$("cfg").onclick = () => $("dlg").showModal();
+$("ok").onclick = () => { $("dlg").close(); build(); };
+
+/* confetti */
+const cv = $("confetti"), ctx = cv.getContext("2d"); let parts = [], raf = 0;
+function size(){ cv.width = innerWidth; cv.height = innerHeight; } size(); addEventListener("resize", size);
+function boom(){
+  for (let i=0;i<120;i++) parts.push({x:cv.width/2,y:cv.height/3,vx:(Math.random()-.5)*18,vy:-Math.random()*16-3,
+    s:6+Math.random()*7,c:`hsl(${Math.random()*360},90%,60%)`,r:Math.random()*6,vr:(Math.random()-.5)*.4,life:120+Math.random()*50});
+  if (!raf) raf = requestAnimationFrame(tick);
+}
+function tick(){
+  ctx.clearRect(0,0,cv.width,cv.height);
+  parts = parts.filter(p => p.life-- > 0 && p.y < cv.height+20);
+  parts.forEach(p => { p.vy += .4; p.x += p.vx; p.y += p.vy; p.vx *= .99; p.r += p.vr;
+    ctx.save(); ctx.translate(p.x,p.y); ctx.rotate(p.r); ctx.fillStyle = p.c; ctx.fillRect(-p.s/2,-p.s/4,p.s,p.s/2); ctx.restore(); });
+  raf = parts.length ? requestAnimationFrame(tick) : 0;
+}
+build();
+</script>
+</body>
+</html>
