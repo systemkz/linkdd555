@@ -130,7 +130,7 @@
     font-size: 20px;
     font-weight: 700;
     letter-spacing: 1.2px;
-    text-transform: uppercase;
+    text-transform: none;
     color: var(--text-secondary);
     padding: 0 20px;
     margin: 20px 0 10px;
@@ -542,26 +542,72 @@
 
 
 
-  <div class="section-label">รายงานและแดชบอร์ด</div>
+  <div class="section-label">e-Office</div>
 
-  <!-- Grafana -->
-  <div class="card" onclick="openLink(this)" data-link="https://dashboard.eoffice.go.th/d/deajjevu2sni8a/adf9d79?orgId=1&from=now-90d&to=now&timezone=browser&var-province_id=$__all&var-org_count=1778&var-tag_uuid=$__all&var-count_dla=1690&var-count_moph_obec=88">
-    <div class="icon c-grafana"><img src="logo/grafana.png" style="filter:brightness(0) invert(1);"></div>
+  <!-- ─── เมนูหลัก: รายงาน e-Office (เมนูย่อย) ─── -->
+  <div class="card has-sub" id="eofficeReportCard" onclick="toggleSubmenu('eofficeReportSub', this)">
+    <div class="icon c-grafana"><i class="fas fa-chart-column"></i></div>
     <div class="card-text">
-      <div class="title">รายงาน e-Office ภาคเหนือ</div>
-      <div class="subtitle">ภาพรวมความคืบหน้าของระบบ e-Office</div>
+      <div class="title">รายงาน e-Office</div>
+      <div class="subtitle">แตะเพื่อเลือกรายงานและแดชบอร์ด e-Office</div>
     </div>
     <i class="fas fa-chevron-right card-arrow"></i>
   </div>
+  <div class="submenu" id="eofficeReportSub">
 
-  <!-- EDM -->
-  <div class="card" onclick="openLink(this)" data-link="https://edm.eoffice.go.th/login">
-    <div class="icon c-white"><img src="logo/edm.png"></div>
+    <div class="sub-card" onclick="openLink(this)" data-link="https://dashboard.eoffice.go.th/d/deajjevu2sni8a/adf9d79?orgId=1&from=now-90d&to=now&timezone=browser&var-province_id=$__all&var-org_count=1778&var-tag_uuid=$__all&var-count_dla=1690&var-count_moph_obec=88">
+      <div class="icon c-grafana"><img src="logo/grafana.png" style="filter:brightness(0) invert(1);"></div>
+      <div class="card-text">
+        <div class="title">รายงาน e-Office ภาคเหนือ</div>
+        <div class="subtitle">ภาพรวมความคืบหน้าของระบบ e-Office</div>
+      </div>
+      <i class="fas fa-chevron-right card-arrow"></i>
+    </div>
+
+    <div class="sub-card" onclick="openLink(this)" data-link="https://edm.eoffice.go.th/login">
+      <div class="icon c-white"><img src="logo/edm.png"></div>
+      <div class="card-text">
+        <div class="title">EDM e-Office</div>
+        <div class="subtitle">ระบบ EDM ติดตามการดำเนินงาน e-Office</div>
+      </div>
+      <i class="fas fa-chevron-right card-arrow"></i>
+    </div>
+
+    <div class="sub-card" onclick="openLink(this)" data-link="https://docs.google.com/spreadsheets/d/1f3ZuvwY75ivfaZrb9yoN0jhXn-do0gdomZb7YVyw8ek/edit?usp=sharing">
+      <div class="icon c-green"><i class="fas fa-table"></i></div>
+      <div class="card-text">
+        <div class="title">url อุตรดิตถ์ </div>
+        <div class="subtitle">ตารางข้อมูล url อุตรดิตถ์</div>
+      </div>
+      <i class="fas fa-chevron-right card-arrow"></i>
+    </div>
+
+  </div>
+
+
+  <div class="section-label">ตามหนี้</div>
+
+  <!-- ตามหนี้ (เมนูย่อย) -->
+  <div class="card has-sub" id="debtCard" onclick="toggleSubmenu('debtSub', this)">
+    <div class="icon c-red"><i class="fas fa-hand-holding-dollar"></i></div>
     <div class="card-text">
-      <div class="title">EDM e-Office</div>
-      <div class="subtitle">ระบบ EDM ติดตามการดำเนินงาน e-Office</div>
+      <div class="title">ตามหนี้</div>
+      <div class="subtitle">แตะเพื่อเลือกเครื่องมือ</div>
     </div>
     <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+  <div class="submenu" id="debtSub">
+
+    <!-- ค้นหาหมู่บ้าน/ชุมชน -->
+    <div class="sub-card" onclick="openLink(this)" data-link="https://systemkz.github.io/UttaraditVillage/">
+      <div class="icon c-teal"><i class="fas fa-home"></i></div>
+      <div class="card-text">
+        <div class="title">ค้นหาหมู่บ้าน/ชุมชน</div>
+        <div class="subtitle">ข้อมูลหมู่บ้าน จ.อุตรดิตถ์</div>
+      </div>
+      <i class="fas fa-chevron-right card-arrow"></i>
+    </div>
+
   </div>
 
 
@@ -598,16 +644,6 @@
   </div>
 
   <div class="section-label">เครื่องมืออื่นๆ</div>
-
-  <!-- ค้นหาหมู่บ้าน/ชุมชน -->
-  <div class="card" onclick="openLink(this)" data-link="https://systemkz.github.io/UttaraditVillage/">
-    <div class="icon c-teal"><i class="fas fa-home"></i></div>
-    <div class="card-text">
-      <div class="title">ค้นหาหมู่บ้าน/ชุมชน</div>
-      <div class="subtitle">ข้อมูลหมู่บ้าน จ.อุตรดิตถ์</div>
-    </div>
-    <i class="fas fa-chevron-right card-arrow"></i>
-  </div>
 
  <!-- รายชื่อผู้เข้าร่วมกิจกรรม -->
   <div class="card" onclick="openLink(this)" data-link="https://docs.google.com/spreadsheets/d/1RQE_9EjOkiK8foT---mCD7OFCgBmkwa3BZjbfhQseL0/edit?usp=sharing">
