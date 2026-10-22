@@ -688,14 +688,44 @@
 
   </div>
 
-  <!-- ตอบแบบสอบถาม -->
-  <div class="card" onclick="openLink(this)" data-link="https://docs.google.com/forms/d/e/1FAIpQLSdc4eire2kAywWBeFPQoeNrBIly8yN1-ih7xsUSpDVKoHDSjA/viewform?usp=dialog">
+  <!-- ตอบแบบสอบถาม (เมนูย่อย) -->
+  <div class="card has-sub" id="surveyCard" onclick="toggleSubmenu('surveySub', this)">
     <div class="icon c-white"><img src="qrcode/ตอบแบบสอบถาม.png"></div>
     <div class="card-text">
       <div class="title">ตอบแบบสอบถาม</div>
-      <div class="subtitle">แตะเพื่อเปิดแบบฟอร์ม หรือสแกน QR Code</div>
+      <div class="subtitle">แตะเพื่อเลือกวิธีตอบแบบสอบถาม</div>
     </div>
     <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+  <div class="submenu" id="surveySub">
+
+    <div class="sub-card" onclick="openGallery('survey')">
+      <div class="icon c-purple"><i class="fas fa-qrcode"></i></div>
+      <div class="card-text">
+        <div class="title">สแกน QR Code</div>
+        <div class="subtitle">แสดง QR Code แบบสอบถาม</div>
+      </div>
+      <i class="fas fa-chevron-right card-arrow"></i>
+    </div>
+
+    <div class="sub-card" onclick="openLink(this)" data-link="https://docs.google.com/forms/d/e/1FAIpQLSdc4eire2kAywWBeFPQoeNrBIly8yN1-ih7xsUSpDVKoHDSjA/viewform?usp=dialog">
+      <div class="icon c-blue"><i class="fas fa-pen-to-square"></i></div>
+      <div class="card-text">
+        <div class="title">เปิดแบบฟอร์ม</div>
+        <div class="subtitle">ตอบแบบสอบถามผ่าน Google Forms</div>
+      </div>
+      <i class="fas fa-chevron-right card-arrow"></i>
+    </div>
+
+    <div class="sub-card" onclick="openLink(this)" data-link="https://docs.google.com/spreadsheets/d/1Za7uGbgWOs6cgYxo8Lt2jJFxtbz_t-P_QdwZHGqBlkE/edit?resourcekey=&gid=1449543436#gid=1449543436">
+      <div class="icon c-green"><i class="fas fa-table"></i></div>
+      <div class="card-text">
+        <div class="title">ดูผลแบบสอบถาม</div>
+        <div class="subtitle">ข้อมูลการตอบกลับ (Google Sheets)</div>
+      </div>
+      <i class="fas fa-chevron-right card-arrow"></i>
+    </div>
+
   </div>
 
  <!-- ค้นหา SDP ขาว -->
@@ -834,6 +864,9 @@ const imageGroups = {
     "qrcode/ntprivilege.jpg",
     "qrcode/facebook_NT_อุตรดิตถ์.jpg",
     "qrcode/NT_Uttaradit.jpg",
+    "qrcode/ตอบแบบสอบถาม.png",
+  ],
+  survey: [
     "qrcode/ตอบแบบสอบถาม.png",
   ],
   group3: [
