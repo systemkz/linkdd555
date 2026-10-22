@@ -449,7 +449,15 @@
     <i class="fas fa-chevron-right card-arrow"></i>
   </div>
 
-
+ <!-- รายชื่อผู้เข้าร่วมกิจกรรม -->
+  <div class="card" onclick="openLink(this)" data-link="https://docs.google.com/spreadsheets/d/1RQE_9EjOkiK8foT---mCD7OFCgBmkwa3BZjbfhQseL0/edit?usp=sharing">
+    <div class="icon c-green"><i class="fas fa-table"></i></div>
+    <div class="card-text">
+      <div class="title">รายชื่อผู้เข้าร่วมกิจกรรม</div>
+      <div class="subtitle">รายชื่อผู้เข้าร่วมกิจกรรม</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
 
 
   <div class="section-label">ระบบภายใน</div>
@@ -506,6 +514,16 @@
     <i class="fas fa-chevron-right card-arrow"></i>
   </div>
 
+  <!-- CIP -->
+  <div class="card" onclick="openLink(this)" data-link="https://cip.intra.ntplc.co.th/cip.aspx">
+    <div class="icon c-white"><img src="logo/cip.png"></div>
+    <div class="card-text">
+      <div class="title">CIP</div>
+      <div class="subtitle">ใช้ภายนอกเชื่อม VPN ก่อนครับ</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
+
 
   <div class="section-label">บริการ NT</div>
 
@@ -539,7 +557,15 @@
     <i class="fas fa-chevron-right card-arrow"></i>
   </div>
 
-
+ <!-- ค้นหา SDP ขาว -->
+  <div class="card" onclick="openLink(this)" data-link="https://118.174.43.6:8239/sdp_north/login.php">
+    <div class="icon c-cyan"><i class="fas fa-search"></i></div>
+    <div class="card-text">
+      <div class="title">ค้นหา SDP ขาว</div>
+      <div class="subtitle">user : รหัสพนักงาน 8 หลัก / pass : nt123</div>
+    </div>
+    <i class="fas fa-chevron-right card-arrow"></i>
+  </div>
 
 
   <div class="section-label">e-Office</div>
@@ -645,15 +671,7 @@
 
   <div class="section-label">เครื่องมืออื่นๆ</div>
 
- <!-- รายชื่อผู้เข้าร่วมกิจกรรม -->
-  <div class="card" onclick="openLink(this)" data-link="https://docs.google.com/spreadsheets/d/1RQE_9EjOkiK8foT---mCD7OFCgBmkwa3BZjbfhQseL0/edit?usp=sharing">
-    <div class="icon c-green"><i class="fas fa-table"></i></div>
-    <div class="card-text">
-      <div class="title">รายชื่อผู้เข้าร่วมกิจกรรม</div>
-      <div class="subtitle">รายชื่อผู้เข้าร่วมกิจกรรม</div>
-    </div>
-    <i class="fas fa-chevron-right card-arrow"></i>
-  </div>
+
 
   <!-- เกมจับรางวัล (เมนูย่อย) -->
   <div class="card has-sub" id="luckyCard" onclick="toggleSubmenu('luckySub', this)">
@@ -764,16 +782,6 @@
 
   </div>
 
- <!-- ค้นหา SDP ขาว -->
-  <div class="card" onclick="openLink(this)" data-link="https://118.174.43.6:8239/sdp_north/login.php">
-    <div class="icon c-cyan"><i class="fas fa-search"></i></div>
-    <div class="card-text">
-      <div class="title">ค้นหา SDP ขาว</div>
-      <div class="subtitle">user : รหัสพนักงาน 8 หลัก / pass : nt123</div>
-    </div>
-    <i class="fas fa-chevron-right card-arrow"></i>
-  </div>
-
   <!-- บันทึกการใช้รถยนต์ -->
   <div class="card" onclick="openLink(this)" data-link="https://artaudio.github.io/WebAppCarRegister-Sale/">
     <div class="icon c-red"><i class="fas fa-car"></i></div>
@@ -873,6 +881,7 @@ function closeVPN() {
 
 const imageGroups = {
   group1: [
+    "img/90522.jpg",
     "img/APN_android.jpg",
     "img/APN_ios.jpg",
     "img/NT_Fiber_Choice_30-06-2569.jpg",
